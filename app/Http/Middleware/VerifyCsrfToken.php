@@ -13,5 +13,8 @@ class VerifyCsrfToken extends Middleware
      */
     protected $except = [
         //
+        'http://apirest-agendamed.com/login',
+        'http://apirest-agendamed.com/registerPatient',
+        'http://apirest-agendamed.com/patientsList'
     ];
 }

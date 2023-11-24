@@ -13,6 +13,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Rutas para Auth
+Route::post('registerUser', [\App\Http\Controllers\Login\LoginController::class, 'saveUser']);
+Route::post('login', [\App\Http\Controllers\Login\LoginController::class, 'login']);
+
+
+// Rutas para Pacientes
+
+Route::post('registerPatient', [\App\Http\Controllers\Pacientes\PatientsController::class, 'savePatients']);
+Route::get('patientsList', [\App\Http\Controllers\Pacientes\PatientsController::class, 'getPatients']);
