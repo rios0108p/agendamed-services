@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\Users;
 use Illuminate\Support\Facades\DB;
 
+use function Laravel\Prompts\select;
+
 class LoginController extends Controller
 {
     public function index() {
@@ -22,17 +24,26 @@ class LoginController extends Controller
         $datauser = array("userName"=>$request->input("userName"),
         "password"=>$request->input("password"));
 
-        $dataLogin = DB::table('users')
-        ->select('UserName', 'Password')
-        ->where('UserName', '=', $datauser['userName'])
-        ->where('Password', '=', $datauser['password'])
-        ->exists();
+        $dataLogin = DB::table('credenciales')
+        ->select('id_usuario', 'usuario', 'contrasena')
+        ->where('usuario', '=', $datauser['userName'])
+        ->where('contrasena', '=', $datauser['password'])
+        ->get();
 
-        if ($dataLogin) {
+        $rol = json_decode($dataLogin, true);
+        //Despues de buscar si existe el usuario en la tabla de credenciales,
+        //Se busca en la tabla de informacion_usuario el rol para saber que mostrar al usuario
+        $datarol = DB::table('informacion_usuario')
+        ->select('id_admin', 'id_info_usuario')
+        ->where('id_info_usuario', '=', $rol[0]['id_usuario'])
+        ->get();
+
+        if ($dataLogin != []) {
+            //Respuesta en formato json al encontrar data y el rol
             $json = array(
                 'status'=>200,
                 'data'=>$datauser,
-                'message'=>$dataLogin
+                'rol'=>$datarol
             );
 
         } else {
